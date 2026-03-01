@@ -162,7 +162,7 @@ col_nav, col_title, col_user = st.columns([1, 4, 2])
 with col_nav:
     st.markdown('<div class="nav-btn">', unsafe_allow_html=True)
     if st.button("← Back to Portal", key="back_btn_strategy"):
-        st.switch_page("app.py")
+        st.switch_page("Top_Page.py")
     st.markdown('</div>', unsafe_allow_html=True)
 with col_title:
     st.markdown("<h1 style='margin: 0; font-size: 2.2rem;'>Corporate Strategy Dashboard</h1><span style='color: #10B981; font-size: 0.9rem;'>● Live Monitoring Active</span>", unsafe_allow_html=True)
