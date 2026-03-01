@@ -6,31 +6,20 @@ import numpy as np
 import time
 import google.generativeai as genai
 
-# --- 1. ページ設定 & 初期化 ---
-st.set_page_config(
-    page_title="Global Management Cockpit - SCM",
-    page_icon="🌐",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title="Global Management Cockpit - SCM", page_icon="🌐", layout="wide", initial_sidebar_state="collapsed")
 
-# API設定
 API_KEY = ""  
 if API_KEY:
     genai.configure(api_key=API_KEY)
 
-# セッションステート初期化
 if "selected_location" not in st.session_state: st.session_state.selected_location = "US West Plant"
 if "sim_transfer" not in st.session_state: st.session_state.sim_transfer = 42
-
 if "messages" not in st.session_state:
-    st.session_state.messages = []
-    st.session_state.messages.append({
+    st.session_state.messages = [{
         "role": "assistant", 
         "content": "**System Online.** 経営参謀エージェントです。全拠点のデータを統合監視中。\n\n🚨 **異常検知**: 米国西海岸工場 (US West Plant) にて部材の在庫枯渇リスク。\nマップ上の赤ピンをクリックして詳細をドリルダウンしてください。"
-    })
+    }]
 
-# --- 2. デザインシステム (Common CSS) ---
 st.markdown("""
     <style>
         .stApp { background-color: #0B1120; color: #F8FAFC; }
@@ -48,7 +37,6 @@ st.markdown("""
 
 PLOT_CONFIG = {'displayModeBar': False}
 
-# --- 3. データ層 ---
 locations_data = {
     "Location": ["US West Plant", "Mexico Plant", "SE Asia Hub", "EU Hub"],
     "lat": [34.05, 19.43, 13.75, 51.16],
@@ -70,7 +58,6 @@ sku_data = {
 }
 df_sku = pd.DataFrame(sku_data)
 
-# --- 4. AI機能 ---
 def agent_response(user_input):
     if not API_KEY:
         time.sleep(1)
@@ -82,11 +69,10 @@ def agent_response(user_input):
     except Exception as e:
         return f"Error: {str(e)}"
 
-# --- 5. メイン画面描画 ---
 col_nav, col_title, col_user = st.columns([1, 4, 2])
 with col_nav:
     st.markdown('<div class="nav-btn">', unsafe_allow_html=True)
-    if st.button("← Back to Portal", key="back_btn"):
+    if st.button("← Back to Portal", key="back_btn_inv"):
         st.switch_page("Top_Page.py")
     st.markdown('</div>', unsafe_allow_html=True)
 with col_title:
@@ -196,7 +182,7 @@ if st.session_state.selected_location:
             df_wf = pd.DataFrame({
                 "Factor": ["想定機会損失額<br>(放置した場合)", "機会損失の回避<br>(売上確保: +)", "緊急空輸コスト<br>(費用増: -)", "純利益への影響<br>(Net Profit)"],
                 "Amount": [base_loss, recovered_profit, transfer_cost, net_impact],
-                "Measure": ["absolute", "relative", "relative", "relative", "total"]
+                "Measure": ["absolute", "relative", "relative", "total"]
             })
             
             fig_wf = go.Figure(go.Waterfall(
