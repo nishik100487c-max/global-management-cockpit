@@ -12,8 +12,8 @@ st.set_page_config(page_title="Global Management Cockpit - Crisis Mode", page_ic
 if "page" not in st.session_state: st.session_state.page = "supply_chain"
 if "oil_price" not in st.session_state: st.session_state.oil_price = 115.0
 if "reroute_ratio" not in st.session_state: st.session_state.reroute_ratio = 40.0
-if "messages" not in st.session_state:
-    st.session_state.messages = [{
+if "messages_crisis" not in st.session_state:
+    st.session_state.messages_crisis = [{
         "role": "assistant",
         "content": "⚠️ **CRISIS ALERT**\n\nロイター通信等の外部ニュースAPIおよび海事データ(AIS)より、**ホルムズ海峡の事実上の封鎖**を検知しました。欧州および北米東海岸向けの物流リードタイムに甚大な影響が出始めています。右側のタブから影響シミュレーションを実行してください。"
     }]
@@ -22,6 +22,10 @@ if "messages" not in st.session_state:
 st.markdown("""
     <style>
         .stApp { background-color: #0B1120; color: #F8FAFC; }
+        
+        /* トップメニューボタン */
+        div.stButton > button.nav-btn { height: 40px !important; font-size: 1rem !important; }
+        
         .stTabs [data-baseweb="tab-list"] { gap: 10px; border-bottom: 2px solid #334155; padding-bottom: 5px; }
         .stTabs [data-baseweb="tab"] { background-color: transparent; border: none; color: #94A3B8; font-weight: bold; font-size: 1.1rem; padding: 10px 20px; }
         .stTabs [aria-selected="true"] { color: #EF4444 !important; border-bottom: 3px solid #EF4444 !important; }
@@ -108,10 +112,18 @@ def get_ai_analysis_html():
 
 # --- 5. メイン画面描画 ---
 def render_crisis_dashboard():
-    # ヘッダー
-    col_nav, col_title = st.columns([1, 6])
-    col_nav.markdown('<div style="margin-top:10px;"><button style="background:transparent; border:1px solid #334155; color:#94A3B8; padding:5px 15px; border-radius:5px;">← Portal</button></div>', unsafe_allow_html=True)
-    col_title.markdown("<h1 style='margin: 0; font-size: 2.2rem; color: #EF4444;'>🚨 Global Cockpit: Middle East Crisis Mode</h1><span style='color: #F59E0B; font-size: 0.9rem;'>● Real-time Ontology Sync Active</span>", unsafe_allow_html=True)
+    # 🌟 他のページと統一されたヘッダーと戻るボタン
+    col_nav, col_title, col_user = st.columns([1, 4, 2])
+    with col_nav:
+        st.markdown('<div class="nav-btn">', unsafe_allow_html=True)
+        if st.button("← Back to Portal", key="back_btn_crisis"):
+            st.switch_page("Top_Page.py")
+        st.markdown('</div>', unsafe_allow_html=True)
+    with col_title:
+        st.markdown("<h1 style='margin: 0; font-size: 2.2rem; color: #EF4444;'>🚨 Middle East Crisis Mode</h1><span style='color: #F59E0B; font-size: 0.9rem;'>● Real-time Ontology Sync Active</span>", unsafe_allow_html=True)
+    with col_user:
+        st.markdown("<div style='text-align: right; color: #94A3B8;'><span style='font-size: 0.8rem;'>HQ_Admin</span><br><span style='font-size: 1.2rem; color: white; font-weight: bold;'>Level 5 Access</span></div>", unsafe_allow_html=True)
+
     st.markdown("<br>", unsafe_allow_html=True)
 
     # エグゼクティブサマリー
@@ -217,21 +229,20 @@ def render_crisis_dashboard():
         
         chat_container = st.container(height=650)
         with chat_container:
-            for msg in st.session_state.messages:
+            for msg in st.session_state.messages_crisis:
                 with st.chat_message(msg["role"], avatar="🦅" if msg["role"] == "assistant" else "👤"):
                     st.markdown(msg["content"], unsafe_allow_html=True)
 
         # ユーザー入力に対する応答（固定）
         if prompt := st.chat_input("何が起きているか分析して..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
+            st.session_state.messages_crisis.append({"role": "user", "content": prompt})
             with chat_container:
                 with st.chat_message("user", avatar="👤"): st.markdown(prompt)
                 with st.chat_message("assistant", avatar="🦅"):
-                    # APIを使わず、待機演出のみでそれっぽく見せる
                     with st.spinner("ニュースストリーム・海事データ・ERPを統合解析中..."):
                         time.sleep(1.5)
                     response = get_ai_analysis_html()
                     st.markdown(response, unsafe_allow_html=True)
-            st.session_state.messages.append({"role": "assistant", "content": response})
+            st.session_state.messages_crisis.append({"role": "assistant", "content": response})
 
 render_crisis_dashboard()
