@@ -9,14 +9,14 @@ st.set_page_config(page_title="Corporate Strategy", page_icon="📊", layout="wi
 if "sim_vc" not in st.session_state: st.session_state.sim_vc = 0.0
 if "sim_promo" not in st.session_state: st.session_state.sim_promo = 0.0
 if "sim_fix" not in st.session_state: st.session_state.sim_fix = 0.0
-if "selected_region" not in st.session_state: st.session_state.selected_region = "MLE" 
+if "selected_region" not in st.session_state: st.session_state.selected_region = "Middle East & Europe" 
 if "prev_sel_l" not in st.session_state: st.session_state.prev_sel_l = None
 if "prev_sel_r" not in st.session_state: st.session_state.prev_sel_r = None
 
 if "messages_strategy" not in st.session_state:
     st.session_state.messages_strategy = [{
         "role": "assistant",
-        "content": "**System Online.** 経営参謀エージェントです。公式ドキュメント（レポート・会議録等）を接続したビジネスオントロジー（構造モデル）との同期を完了しました。\n\n⚠️ **異常検知:** MLE地域のHardware事業において、利益(EBITDA)が計画比で大幅未達（計画25.0Mに対し実績見込5.0M）となっています。要因の深掘り分析を実行しますか？"
+        "content": "**System Online.** 経営参謀エージェントです。公式ドキュメント（レポート・会議録等）を接続したビジネスオントロジー（構造モデル）との同期を完了しました。\n\n⚠️ **異常検知:** 中東・欧州地域のHardware事業において、利益(EBITDA)が計画比で大幅未達（計画25.0Mに対し実績見込5.0M）となっています。要因の深掘り分析を実行しますか？"
     }]
 
 # --- Mac-like モダンデザイン & Plotly点滅アニメーション ---
@@ -81,8 +81,8 @@ st.markdown("""
         div[data-testid="stChatMessage"] { background-color: transparent !important; }
         div[data-testid="stChatMessageContent"] p { color: #F1F5F9 !important; line-height: 1.6; }
         .factor-bar-container { display: flex; height: 26px; border-radius: 4px; overflow: hidden; margin: 15px 0; border: 1px solid #334155; font-size: 0.85rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);}
-        .factor-ext { width: 65%; background: linear-gradient(90deg, #F59E0B, #D97706); display: flex; align-items: center; justify-content: center; color: #fff; }
-        .factor-int { width: 35%; background: linear-gradient(90deg, #EF4444, #B91C1C); display: flex; align-items: center; justify-content: center; color: #fff; }
+        .factor-ext { width: 75%; background: linear-gradient(90deg, #F59E0B, #D97706); display: flex; align-items: center; justify-content: center; color: #fff; }
+        .factor-int { width: 25%; background: linear-gradient(90deg, #EF4444, #B91C1C); display: flex; align-items: center; justify-content: center; color: #fff; }
         .source-card { background-color: #1E293B; border-left: 4px solid #3B82F6; padding: 12px 15px; margin-bottom: 12px; border-radius: 4px 8px 8px 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
         .source-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; color: #94A3B8; border-bottom: 1px solid #334155; padding-bottom: 4px; }
         .source-body { font-size: 0.9rem; color: #CBD5E1; font-style: italic; line-height: 1.5; }
@@ -92,18 +92,18 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 地域名の変更 (North America -> MLA, EMEA -> MLE, APAC -> MLAP, LatAm -> Japan)
-regions = ["MLA", "MLE", "MLAP", "Japan"]
+# 地域名の汎化設定
+regions = ["America", "Middle East & Europe", "Asia", "Japan"]
 bizs = ["Hardware", "Rental & O&M", "Solutions"]
 reg_rev_plan = [460, 310, 290, 150]; reg_rev_act = [450, 300, 305, 140]; reg_rev_py = [420, 280, 260, 130]
 reg_ebitda_plan = [68, 45, 40, 20];  reg_ebitda_act = [65, 25, 42, 18];  reg_ebitda_py = [60, 42, 35, 15]
 
 biz_data = {
-    "All":           {"r_p":[640, 370, 200], "r_a":[630, 380, 195], "r_py":[580, 330, 180], "e_p":[78, 70, 25], "e_a":[48, 77, 20], "e_py":[66, 64, 22]},
-    "MLA":           {"r_p":[250, 130, 80],  "r_a":[245, 135, 70],  "r_py":[230, 120, 70],  "e_p":[35, 25, 8],  "e_a":[34, 25, 6],  "e_py":[30, 22, 8]},
-    "MLE":           {"r_p":[160, 100, 50],  "r_a":[150, 105, 45],  "r_py":[150, 90, 40],   "e_p":[25, 15, 5],  "e_a":[5,  18, 2],  "e_py":[20, 15, 6]},
-    "MLAP":          {"r_p":[150, 90, 50],   "r_a":[160, 95, 50],   "r_py":[130, 80, 50],   "e_p":[18, 15, 7],  "e_a":[20, 16, 6],  "e_py":[15, 14, 6]},
-    "Japan":         {"r_p":[80, 50, 20],    "r_a":[75, 45, 20],    "r_py":[70, 40, 20],    "e_p":[10, 8, 2],   "e_a":[8,  8, 2],   "e_py":[8,  5, 2]}
+    "All":                  {"r_p":[640, 370, 200], "r_a":[630, 380, 195], "r_py":[580, 330, 180], "e_p":[78, 70, 25], "e_a":[48, 77, 20], "e_py":[66, 64, 22]},
+    "America":              {"r_p":[250, 130, 80],  "r_a":[245, 135, 70],  "r_py":[230, 120, 70],  "e_p":[35, 25, 8],  "e_a":[34, 25, 6],  "e_py":[30, 22, 8]},
+    "Middle East & Europe": {"r_p":[160, 100, 50],  "r_a":[150, 105, 45],  "r_py":[150, 90, 40],   "e_p":[25, 15, 5],  "e_a":[5,  18, 2],  "e_py":[20, 15, 6]},
+    "Asia":                 {"r_p":[150, 90, 50],   "r_a":[160, 95, 50],   "r_py":[130, 80, 50],   "e_p":[18, 15, 7],  "e_a":[20, 16, 6],  "e_py":[15, 14, 6]},
+    "Japan":                {"r_p":[80, 50, 20],    "r_a":[75, 45, 20],    "r_py":[70, 40, 20],    "e_p":[10, 8, 2],   "e_a":[8,  8, 2],   "e_py":[8,  5, 2]}
 }
 
 def draw_bar_in_bar_monthly(metric):
@@ -137,45 +137,45 @@ def draw_horizontal_bar(categories, plan, act, py, selected_cat=None):
 
 def get_ai_analysis_html():
     return """
-**【MLE - Hardware事業 利益未達要因分析】**
+**【中東・欧州地域 - Hardware事業 利益未達要因分析】**
 公式発行の週報レポートや各種会議の議事録・トランスクリプト（AI自動生成）から構築されたビジネスオントロジーを解析し、計画減少幅（▲ $20.0M）の要因を特定しました。
 
 <div class="factor-bar-container">
-    <div class="factor-ext">外部要因 65% (▲ $13.0M)</div>
-    <div class="factor-int">内部要因 35% (▲ $7.0M)</div>
+    <div class="factor-ext">外部要因 (地政学リスク) 75%</div>
+    <div class="factor-int">内部要因 (BCP対応遅延) 25%</div>
 </div>
 
-**🌪️ 外部要因（自身ではコントロール困難な要因）**
-* **顧客先の建築工期遅れ:** 現地ゼネコンの環境アセスメント遅延に伴う納品延期、および外部倉庫での機材待機・保管費用の高騰。
+**🌪️ 外部要因（コントロール困難なマクロ要因）**
+* **軍事衝突による港湾封鎖・需要消失:** 米国と中東間の軍事衝突激化に伴い、主要港へのミサイル攻撃が発生。海運キャリアの乗り入れが全面ストップし、進行中だった大型プロジェクトが不可抗力条項(Force Majeure)で無期限凍結に。
 
 **🏭 内部要因（自社で改善・対応可能な要因）**
-* **歩留まり率悪化・欠品発生:** サプライヤーからの特定部品（コンデンサ）納品遅延に伴う欠品発生と、代替品でのテスト生産に伴う歩留まり悪化（想定98%→実績78%）。
+* **代替市場への在庫転送決定の遅れ:** 現地法人の事業継続計画(BCP)発動が遅れ、滞留在庫をアジア・日本市場へ空輸で引き揚げる決断に時間を要した結果、莫大な保管料と固定費が利益を圧迫。
 
 ---
 ###### 📚 判断根拠（ビジネスオントロジー抽出データ）
 
 <div class="source-card" style="border-left-color: #F59E0B;">
     <div class="source-header">
-        <span>📄 <b>欧州営業本部 週報</b> (第32週)</span>
+        <span>📄 <b>中東・欧州営業本部 週報</b> (第32週)</span>
         <span class="source-tag tag-ext">外部要因</span>
     </div>
     <div class="source-body">
-        「ミュンヘンのデータセンター案件について、ゼネコンの環境アセスメント遅延に伴う基礎工事の3ヶ月延期が確定。機材出荷が滞り、外部倉庫の保管料が月額$2Mペースで発生中。」
+        「ドバイおよびロッテルダム港湾施設へのミサイル攻撃の余波で、主要海運キャリアが当該エリアへの乗り入れを全面ストップ。納入予定だったデータセンター案件3件が不可抗力条項により無期限停止となり、今期の売上見込が完全に消失した。」
     </div>
 </div>
 
 <div class="source-card" style="border-left-color: #EF4444;">
     <div class="source-header">
-        <span>📑 <b>MLE生産管理会議 議事録</b></span>
+        <span>📑 <b>グローバルSCM緊急会議 議事録</b></span>
         <span class="source-tag tag-int">内部要因</span>
     </div>
     <div class="source-body">
-        「主要部品の入荷遅延によりラインが一時停止。急遽手配した代替部品でのテスト生産を行っているが、歩留まり率が78%まで落ち込んでおり、廃棄ロスが利益を圧迫している旨が報告された。」
+        「港湾封鎖により現地在庫が完全に身動きが取れない状態。危険地帯での外部倉庫保管料が1日あたり$100kペースで高騰している上、販売の目処が立たない。早期に損切りし、需要が底堅いAsiaおよびJapan市場へ特別手配の航空便で在庫を退避させる緊急決議が必要だが、承認プロセスが滞っている。」
     </div>
 </div>
 
 💡 **推奨アクション**
-外部要因による巨大な待機費用を圧縮するため、現在滞留している在庫の一部を需要が逼迫しているMLAPへ転送（在庫融通）する方針が有効です。左側の**「🛠️ 3. 収益構造シミュレーション」**タブから、振替によるリカバリー額のシミュレーションを実行してください。
+急激な需要消失による赤字を最小化するため、滞留在庫のアジア市場への転送と、現地販管費（Promotion等）の緊急カットが必要です。左側の**「🛠️ 3. 収益構造シミュレーション」**タブから、コスト削減によるリカバリーシミュレーションを実行してください。
 """
 
 col_nav, col_title, col_user = st.columns([1, 4, 2])
@@ -191,7 +191,7 @@ with col_user:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# --- 刷新されたエグゼクティブサマリー ---
+# --- 中東危機連動のエグゼクティブサマリー ---
 st.markdown("""
 <div class="mac-panel">
     <h4>Executive Summary</h4>
@@ -206,7 +206,7 @@ st.markdown("""
         </li>
         <li>
             <span class="badge badge-info">Insight</span>
-            <span>AI分析により、最大の要因は <strong style="color: #F8FAFC; border-bottom: 2px dashed #F87171; padding-bottom: 2px;">MLE地域のHardware事業</strong>（利益計画 $25.0M → 実績見込 $5.0M）における利益急減と特定されました。右側のAIエージェントに詳細な要因を質問してください。</span>
+            <span>AI解析により、最大の要因は <strong style="color: #F8FAFC; border-bottom: 2px dashed #F87171; padding-bottom: 2px;">中東・欧州地域のHardware事業</strong> における、<b>米国との軍事衝突激化に伴う急激な需要消失と物流停止</b>（利益計画 $25.0M → 実績見込 $5.0M）と特定されました。右側のAIエージェントに詳細な要因を質問してください。</span>
         </li>
     </ul>
 </div>
@@ -309,7 +309,7 @@ with col_dash:
 
     with tab3:
         st.markdown("### 🛠️ 収益リカバリー・シミュレーション")
-        st.caption("対象スコープ: [Region: MLE] × [Business: Hardware] の赤字リカバリー")
+        st.caption("対象スコープ: [Region: Middle East & Europe] × [Business: Hardware] の赤字リカバリー")
 
         base_plan = 25.0  
         current_act = 5.0 
@@ -319,7 +319,7 @@ with col_dash:
         total_fix_base = 80.0  
         
         st.markdown("#### 🎛️ コスト削減・在庫融通シミュレーター (全コストベースに対する改善 %)")
-        st.caption("※右側のAIが提案する「他地域への在庫融通」等により、発生中の待機費用(Variable Cost)を何％圧縮できるかシミュレーションします。")
+        st.caption("※右側のAIが提案する「他地域への在庫融通」や、販売見込のないエリアでの「販管費(Promo/Fix)の緊急カット」により、損失を何％圧縮できるかシミュレーションします。")
         
         c1, c2, c3 = st.columns(3)
         st.session_state.sim_vc = c1.slider("⚙️ Variable Cost 削減 (%)", 0.0, 15.0, st.session_state.sim_vc, 1.0)
@@ -365,8 +365,8 @@ with col_chat:
     st.markdown("<span style='color:#10B981; font-size: 0.85rem; font-weight: bold;'>● Business Ontology Sync Active</span>", unsafe_allow_html=True)
     st.markdown("---")
     
-    if st.button("💡 デモ: MLE Hardwareの要因分析を実行", use_container_width=True):
-        st.session_state.messages_strategy.append({"role": "user", "content": "MLEのHardware事業において利益が大幅未達となっている要因を分析して。"})
+    if st.button("💡 デモ: 中東・欧州 Hardwareの要因分析を実行", use_container_width=True):
+        st.session_state.messages_strategy.append({"role": "user", "content": "中東・欧州のHardware事業において利益が大幅未達となっている要因を分析して。"})
         with st.spinner("ビジネスオントロジーを解析中..."):
             time.sleep(1.5)
         st.session_state.messages_strategy.append({"role": "assistant", "content": get_ai_analysis_html()})
@@ -384,11 +384,11 @@ with col_chat:
             with st.chat_message("user", avatar="👤"):
                 st.markdown(prompt)
             with st.chat_message("assistant", avatar="🦅"):
-                if any(word in prompt for word in ["MLE", "要因", "分析", "なぜ", "未達", "ハード"]):
+                if any(word in prompt for word in ["中東", "欧州", "要因", "分析", "なぜ", "未達", "ハード"]):
                     with st.spinner("ビジネスオントロジーを解析・統合中..."):
                         time.sleep(1.5)
                     response = get_ai_analysis_html()
                 else:
-                    response = "承知しました。社内のビジネスオントロジーには常時接続しています。具体的な分析対象（例: 「MLEの要因分析をして」）を指示してください。"
+                    response = "承知しました。社内のビジネスオントロジーには常時接続しています。具体的な分析対象（例: 「中東・欧州の要因分析をして」）を指示してください。"
                 st.markdown(response, unsafe_allow_html=True)
         st.session_state.messages_strategy.append({"role": "assistant", "content": response})
