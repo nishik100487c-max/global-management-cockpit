@@ -5,7 +5,7 @@ st.set_page_config(
     page_title="Global Management Cockpit",
     page_icon="🌐",
     layout="wide",
-    initial_sidebar_state="collapsed" # メイン画面を広く見せる
+    initial_sidebar_state="collapsed"
 )
 
 # --- 2. デザインシステム (Common CSS) ---
@@ -25,7 +25,7 @@ st.markdown("""
             border: 1px solid #334155;
             border-radius: 12px;
             color: #F8FAFC;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
@@ -63,49 +63,49 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# 3カラムで各種モジュールへの入り口を配置
+# 視線誘導に合わせた3カラム配置（左：経営 ➔ 中：アラート ➔ 右：現場解決）
 c1, c2, c3 = st.columns(3)
 
 with c1:
-    st.markdown("##### Supply Chain & Operations")
-    
-    # 1つ目のダッシュボードへ遷移
-    if st.button("📦 調達・生産・品質保証\nSupply Chain Mgt"):
+    st.markdown("##### 1. Corporate Strategy")
+    # 左上：一番最初に見てほしい経営ダッシュボード
+    if st.button("📊 グローバル経営数値管理\nExecutive Dashboard"):
         try:
-            st.switch_page("pages/01_SCM_Inventory.py")
+            st.switch_page("pages/03_Corporate_Strategy.py")
         except Exception:
-            st.error("⚠️ 遷移先のファイル (`pages/01_SCM_Inventory.py`) が見つかりません。")
+            st.error("⚠️ ファイル `pages/03_Corporate_Strategy.py` が見つかりません。")
             
-    # 2つ目のダッシュボードへ遷移
-    if st.button("🚨 SCM危機管理モード\nCrisis Response"):
+    # その下の適当な配置
+    if st.button("💼 管理・HR\nAdmin & HR"):
+        st.toast("Connecting to Admin module...")
+
+with c2:
+    st.markdown("##### 2. Crisis Response")
+    # 中央：アラート画面
+    if st.button("🚨 SCM Alert (中東危機)\nCrisis Simulation"):
         try:
             st.switch_page("pages/02_SCM_Crisis_Mode.py")
         except Exception:
-            st.error("⚠️ 遷移先のファイル (`pages/02_SCM_Crisis_Mode.py`) が見つかりません。")
+            st.error("⚠️ ファイル `pages/02_SCM_Crisis_Mode.py` が見つかりません。")
             
     if st.button("🏭 研究開発\nR&D Innovation"):
         st.toast("Connecting to R&D module...")
 
-with c2:
-    st.markdown("##### Corporate Strategy")
-    
-    # 3つ目のダッシュボードへ遷移
-    if st.button("📊 経営管理\nCorporate Strategy"):
-        try:
-            st.switch_page("pages/03_Corporate_Strategy.py")
-        except Exception:
-            st.error("⚠️ 遷移先のファイル (`pages/03_Corporate_Strategy.py`) が見つかりません。")
-        
-    if st.button("💼 管理\nAdmin & HR"):
-        st.toast("Connecting to Admin module...")
-
 with c3:
-    st.markdown("##### Finance & Solutions")
+    st.markdown("##### 3. Supply Chain Operations")
+    # 右上：シミュレーション画面
+    if st.button("📦 SCM Simulation\nInventory & Procurement"):
+        # 💡 万が一スペルミス（Inentory）のままでも動くように、安全策を組んでいます
+        try:
+            st.switch_page("pages/01_SCM_Inventory.py")
+        except Exception:
+            try:
+                st.switch_page("pages/01_SCM_Inentory.py")
+            except Exception:
+                st.error("⚠️ ファイルが見つかりません（ファイル名をご確認ください）。")
+                
     if st.button("💰 経理財務\nFinance & Accounting"):
         st.toast("Connecting to Finance module...")
-        
-    if st.button("🚀 ソリューション\nSolutions & Sales"):
-        st.toast("Connecting to Sales module...")
 
 # フッター
 st.markdown("---")
