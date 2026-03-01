@@ -68,42 +68,44 @@ c1, c2, c3 = st.columns(3)
 
 with c1:
     st.markdown("##### 1. Corporate Strategy")
-    # 左上：一番最初に見てほしい経営ダッシュボード
     if st.button("📊 グローバル経営数値管理\nExecutive Dashboard"):
         try:
             st.switch_page("pages/03_Corporate_Strategy.py")
         except Exception:
-            st.error("⚠️ ファイル `pages/03_Corporate_Strategy.py` が見つかりません。")
+            st.error("⚠️ ファイルが見つかりません。")
             
-    # その下の適当な配置
+    st.markdown("<br>", unsafe_allow_html=True) # 余白
+    
+    st.markdown("##### 4. Corporate Administration")
     if st.button("💼 管理・HR\nAdmin & HR"):
         st.toast("Connecting to Admin module...")
 
 with c2:
-    st.markdown("##### 2. Crisis Response")
-    # 中央：アラート画面
-    if st.button("🚨 SCM Alert (中東危機)\nCrisis Simulation"):
+    st.markdown("##### 2. Risk Management")
+    # 特定の事象名（中東危機）を消し、汎用的なリスク検知機能としてリネーム
+    if st.button("🚨 SCM Alert\nCrisis Simulation"):
         try:
             st.switch_page("pages/02_SCM_Crisis_Mode.py")
         except Exception:
-            st.error("⚠️ ファイル `pages/02_SCM_Crisis_Mode.py` が見つかりません。")
+            st.error("⚠️ ファイルが見つかりません。")
             
+    st.markdown("<br>", unsafe_allow_html=True) # 余白
+    
+    st.markdown("##### 5. Research & Development")
     if st.button("🏭 研究開発\nR&D Innovation"):
         st.toast("Connecting to R&D module...")
 
 with c3:
     st.markdown("##### 3. Supply Chain Operations")
-    # 右上：シミュレーション画面
     if st.button("📦 SCM Simulation\nInventory & Procurement"):
-        # 💡 万が一スペルミス（Inentory）のままでも動くように、安全策を組んでいます
         try:
             st.switch_page("pages/01_SCM_Inventory.py")
         except Exception:
-            try:
-                st.switch_page("pages/01_SCM_Inentory.py")
-            except Exception:
-                st.error("⚠️ ファイルが見つかりません（ファイル名をご確認ください）。")
+            st.error("⚠️ ファイルが見つかりません。")
                 
+    st.markdown("<br>", unsafe_allow_html=True) # 余白
+    
+    st.markdown("##### 6. Finance & Accounting")
     if st.button("💰 経理財務\nFinance & Accounting"):
         st.toast("Connecting to Finance module...")
 
