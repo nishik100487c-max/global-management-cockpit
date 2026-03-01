@@ -177,10 +177,12 @@ st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("""
 <div class="summary-panel">
     <h4>📋 エグゼクティブサマリー</h4>
-    <p style="margin-bottom: 0; color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">
-        全社売上は前年比+5.1%と成長を維持しているものの、<b>年間利益(EBITDA)は計画比 ▲8.7% の未達アラート</b>が点灯しています。<br>
-        AIの初期分析により、最大の要因は<b>EMEA地域のHardware事業</b>（利益計画 $25.0M → 実績見込 $5.0M）における利益急減と特定されました。右側のAIエージェントに詳細な要因を質問してください。
-    </p>
+    <ul style="margin-bottom: 0; color: #CBD5E1; font-size: 1.0rem; line-height: 1.8; padding-left: 1.5rem;">
+        <li><span style="color: #10B981; font-weight: bold;">【好調】</span> 全社売上は前年比 <span style="color: #10B981; font-weight: bold; font-size: 1.1rem;">+5.1%</span> と成長を維持。</li>
+        <li><span style="color: #EF4444; font-weight: bold;">【未達アラート】</span> 年間利益(EBITDA)は計画比 <span style="color: #EF4444; font-weight: bold; font-size: 1.1rem;">▲8.7%</span> と大幅な未達見込み。</li>
+        <li><span style="color: #EF4444; font-weight: bold;">【最大要因】</span> AIの初期分析により、<span style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 6px; border-radius: 4px; color: #F8FAFC; font-weight: bold;">EMEA地域のHardware事業</span>（利益計画 $25.0M → 実績見込 $5.0M）における利益急減を特定。</li>
+        <li style="list-style-type: none; margin-top: 10px;">💡 <span style="color: #94A3B8; font-size: 0.9rem;">Next Action: 右側のAIエージェントに詳細な要因を質問し、リカバリー策をシミュレーションしてください。</span></li>
+    </ul>
 </div>
 """, unsafe_allow_html=True)
 
@@ -378,3 +380,4 @@ with col_chat:
                     response = "承知しました。社内のビジネスオントロジーには常時接続しています。具体的な分析対象（例: 「EMEAの要因分析をして」）を指示してください。"
                 st.markdown(response, unsafe_allow_html=True)
         st.session_state.messages_strategy.append({"role": "assistant", "content": response})
+
