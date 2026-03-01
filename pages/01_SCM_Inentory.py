@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# API設定 (空欄のままで安全なデモモードが作動します)
+# API設定
 API_KEY = ""  
 if API_KEY:
     genai.configure(api_key=API_KEY)
@@ -34,10 +34,7 @@ if "messages" not in st.session_state:
 st.markdown("""
     <style>
         .stApp { background-color: #0B1120; color: #F8FAFC; }
-        
-        /* トップメニューボタン */
         div.stButton > button.nav-btn { height: 40px !important; font-size: 1rem !important; }
-        
         [data-testid="stSidebar"] { background-color: #0F172A; border-right: 1px solid #1E293B; }
         div[data-testid="stMetric"] { background-color: transparent !important; border: none !important; padding: 0 !important; }
         div[data-testid="stMetricValue"] { color: #F8FAFC !important; font-size: 2.5rem !important; font-weight: 700 !important; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
@@ -45,12 +42,7 @@ st.markdown("""
         .js-plotly-plot .plotly .main-svg, [data-testid="stDataFrame"] { background: transparent !important; }
         div[data-testid="stChatMessage"] { background-color: transparent !important; }
         div[data-testid="stChatMessageContent"] p { color: #F1F5F9 !important; }
-        
-        /* ドリルダウン領域の装飾 */
-        .drilldown-container {
-            background: linear-gradient(145deg, #1E293B, #0F172A);
-            border: 1px solid #334155; border-radius: 12px; padding: 25px; margin-top: 10px;
-        }
+        .drilldown-container { background: linear-gradient(145deg, #1E293B, #0F172A); border: 1px solid #334155; border-radius: 12px; padding: 25px; margin-top: 10px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -72,4 +64,32 @@ sku_data = {
     "倉庫": ["WH-A (メイン組立)", "WH-A (メイン組立)", "WH-B (電装部品)", "WH-C (外装)"],
     "部材(SKU)": ["高トルクサーボモーター", "制御基板 X-100", "光センサーモジュール", "チタン合金フレーム"],
     "需要標準偏差(σ)": [2.5, 15.2, 5.8, 1.5],
-    "基準在庫(AI設定)": [50, 200, 3
+    "基準在庫(AI設定)": [50, 200, 30, 10], 
+    "現在庫": [8, 195, 35, 12],
+    "ステータス": ["🔴 欠品寸前", "🟡 警告", "🔵 余剰", "🟢 正常"]
+}
+df_sku = pd.DataFrame(sku_data)
+
+# --- 4. AI機能 ---
+def agent_response(user_input):
+    if not API_KEY:
+        time.sleep(1)
+        return "⚠️ APIキー未設定 (Demo Mode)\n\n**AI分析インサイト**:\n米国西海岸工場の「高トルクサーボモーター」は、需要の標準偏差(σ=2.5)から算出された基準在庫(50)に対し、現在庫(8)と致命的な水準です。\nこのままではラインが停止し、**最大$420,000の機会損失**が発生します。\n\n**推奨アクション**:\nマップ上で青色(Source)となっている「Mexico Plant」には同部品の余剰在庫があります。緊急空輸コスト($21,000)を支払ってでも、直ちに42個の在庫転送(STO)を実行し、限界利益を確保してください。"
+    try:
+        model = genai.GenerativeModel("gemini-1.5-pro")
+        response = model.generate_content(user_input)
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# --- 5. メイン画面描画 ---
+col_nav, col_title, col_user = st.columns([1, 4, 2])
+with col_nav:
+    st.markdown('<div class="nav-btn">', unsafe_allow_html=True)
+    if st.button("← Back to Portal", key="back_btn"):
+        st.switch_page("Top_Page.py")
+    st.markdown('</div>', unsafe_allow_html=True)
+with col_title:
+    st.markdown("<h1 style='margin: 0; font-size: 2.2rem;'>Global Supplychain Management</h1><span style='color: #10B981; font-size: 0.9rem;'>● Live Monitoring Active</span>", unsafe_allow_html=True)
+with col_user:
+    st.markdown("<div style='text-align: right; color: #94A3B8;'><span style='font-size: 0.8rem;'>HQ_
