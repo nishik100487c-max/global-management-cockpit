@@ -34,7 +34,15 @@ st.markdown("""
             align-items: center;
             justify-content: center;
             gap: 10px;
+            white-space: pre-wrap !important; /* 💡指定した位置(\n)での改行を強制する */
+            line-height: 1.4 !important;
         }
+        /* ボタン内のテキスト要素にも改行ルールを適用 */
+        div.stButton > button * {
+            white-space: pre-wrap !important;
+            text-align: center !important;
+        }
+        
         div.stButton > button:hover {
             background: linear-gradient(145deg, #334155, #1E293B);
             border-color: #3B82F6;
@@ -63,18 +71,19 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# 視線誘導に合わせた3カラム配置（左：経営 ➔ 中：アラート ➔ 右：現場解決）
+# 視線誘導に合わせた3カラム配置
 c1, c2, c3 = st.columns(3)
 
 with c1:
     st.markdown("##### 1. Corporate Strategy")
+    # 💡 英語と日本語の間で綺麗に改行されます
     if st.button("📊 グローバル経営数値管理\nExecutive Dashboard"):
         try:
             st.switch_page("pages/03_Corporate_Strategy.py")
         except Exception:
             st.error("⚠️ ファイルが見つかりません。")
             
-    st.markdown("<br>", unsafe_allow_html=True) # 余白
+    st.markdown("<br>", unsafe_allow_html=True)
     
     st.markdown("##### 4. Corporate Administration")
     if st.button("💼 管理・HR\nAdmin & HR"):
@@ -82,14 +91,14 @@ with c1:
 
 with c2:
     st.markdown("##### 2. Risk Management")
-    # 特定の事象名（中東危機）を消し、汎用的なリスク検知機能としてリネーム
-    if st.button("🚨 SCM Alert\nCrisis Simulation"):
+    # 💡 日本語の汎用名称を追加し、フォーマットを統一しました
+    if st.button("🚨 SCMリスク管理・アラート\nCrisis Simulation"):
         try:
             st.switch_page("pages/02_SCM_Crisis_Mode.py")
         except Exception:
             st.error("⚠️ ファイルが見つかりません。")
             
-    st.markdown("<br>", unsafe_allow_html=True) # 余白
+    st.markdown("<br>", unsafe_allow_html=True)
     
     st.markdown("##### 5. Research & Development")
     if st.button("🏭 研究開発\nR&D Innovation"):
@@ -97,13 +106,14 @@ with c2:
 
 with c3:
     st.markdown("##### 3. Supply Chain Operations")
-    if st.button("📦 SCM Simulation\nInventory & Procurement"):
+    # 💡 日本語の汎用名称を追加し、フォーマットを統一しました
+    if st.button("📦 在庫・調達シミュレーション\nInventory & Procurement"):
         try:
             st.switch_page("pages/01_SCM_Inventory.py")
         except Exception:
             st.error("⚠️ ファイルが見つかりません。")
                 
-    st.markdown("<br>", unsafe_allow_html=True) # 余白
+    st.markdown("<br>", unsafe_allow_html=True)
     
     st.markdown("##### 6. Finance & Accounting")
     if st.button("💰 経理財務\nFinance & Accounting"):
